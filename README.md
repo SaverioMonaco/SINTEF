@@ -1,29 +1,10 @@
-## Beamer template for UIC
+fork from: https://github.com/usamamuneeb/uic-beamer-template
+## Beamer template for DESY
 
-This is a LaTeX Beamer template crafted for University of Illinois Chicago according to the university's [style guide](https://marketing.uic.edu/marketing-toolbox/university-style-guide/).
+examples:
 
-This template has been derived from the Overleaf template for [SINTEF](https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx). Multiple iterations have been done on the example slides to demonstrate the most useful Beamer features. Some extra commands have been added to solve minor issues.
+![cover](./readmeassets/cover.png)
+![chapter](./readmeassets/chapter.png)
+![frame](./readmeassets/frame.png)
+![standout](./readmeassets/standout.png)
 
-### Quick start
-
-You can [use this template directly on Overleaf](https://www.overleaf.com/latex/templates/uic-presentation-template/dgjbtyvtgqcg).
-
-### Support for OpenType fonts
-
-This template supports OpenType fonts if used with XeLaTeX (set as default on Overleaf template). If you have references, your compile command should look like this:
-
-```bash
-xelatex main && bibtex main && xelatex main && xelatex main
-```
-
-**Note**: If you don't have any references, `bibtex main` will fail. You however still need to run the compiler twice, to get the PDF page numbers right.
-
-```bash
-xelatex main && xelatex main
-```
-
-pdfLaTeX can still be used, except that instead of the included fonts, it will use font packages from your TeX distribution (exhaustive list provided in the [LaTeX Font Catalog](https://tug.org/FontCatalogue)). To build, you can do something similar to above (replacing `xelatex` with `pdflatex` or you can use `latexmk`)
-
-```bash
-latexmk -pdf main.tex
-```
