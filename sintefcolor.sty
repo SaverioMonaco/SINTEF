@@ -1,0 +1,98 @@
+% Fork of the UIC Beamer presentation template
+% Original template by Usama Muneeb <umunee2@uic.edu>
+%
+% This fork includes modifications for DESY-style presentations,
+% including TikZ-based chapter backgrounds and key-value frame options.
+%
+% The original template itself is derived from the SINTEF template
+% by Federico Zenith <federico.zenith@sintef.no>, which in turn
+% descends from Håvard Berland's beamerthementnu class.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+% See the GNU General Public License for more details:
+% <http://www.gnu.org/licenses/>
+%
+% Modifications by Saverio Monaco
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sintefcolor}[2023/04/26]
+
+\RequirePackage{xcolor}
+
+% -----------------------------
+% THEME PALETTE
+% -----------------------------
+% The theme is driven by two colors: a primary color (footline, dark
+% slides, frame titles) and a secondary color (subtitles, accents).
+% Each has darker shades that are derived below.
+%
+% Select a predefined palette through the theme option
+%     \usetheme[palette=desy]{sintef}    % DESY blue + orange (default)
+%     \usetheme[palette=ocean]{sintef}   % deep blue + teal
+% or set any pair of colors in the preamble (xcolor expressions allowed):
+%     \definecolor{myprimary}{RGB}{120, 0, 60}
+%     \definecolor{mysecondary}{RGB}{240, 170, 0}
+%     \setpalette{myprimary}{mysecondary}
+
+% Fully specified palette: #1 primary, #2 primary dark, #3 primary darker,
+%                          #4 secondary, #5 secondary dark (all RGB triplets)
+\newcommand{\definepalette}[6]{%
+	\@namedef{sintef@palette@#1}{%
+		\definecolor{themeprimary}{RGB}{#2}%
+		\definecolor{themeprimarydark}{RGB}{#3}%
+		\definecolor{themeprimarydarker}{RGB}{#4}%
+		\definecolor{themesecondary}{RGB}{#5}%
+		\definecolor{themesecondarydark}{RGB}{#6}%
+		\sintef@aliascolors
+	}%
+}
+
+\definepalette{desy}{0, 166, 235}{0, 140, 220}{0, 120, 200}{243, 142, 0}{230, 120, 0}
+\definepalette{ocean}{0, 97, 174}{0, 90, 170}{0, 80, 160}{0, 150, 140}{0, 140, 130}
+
+\newcommand{\usepalette}[1]{%
+	\ifcsname sintef@palette@#1\endcsname
+		\@nameuse{sintef@palette@#1}%
+	\else
+		\PackageError{sintefcolor}{Unknown palette `#1'}{Available: desy, ocean. Use \string\setpalette{primary}{secondary} for custom colors.}%
+	\fi
+}
+
+% Any pair of colors; the darker shades are derived automatically
+\newcommand{\setpalette}[2]{%
+	\colorlet{themeprimary}{#1}%
+	\colorlet{themeprimarydark}{#1!93!black}%
+	\colorlet{themeprimarydarker}{#1!85!black}%
+	\colorlet{themesecondary}{#2}%
+	\colorlet{themesecondarydark}{#2!93!black}%
+	\sintef@aliascolors
+}
+
+% Legacy names, kept so that existing slides (and packages that refer to
+% them by name) follow the active palette
+\newcommand{\sintef@aliascolors}{%
+	\colorlet{desyblue}{themeprimary}%
+	\colorlet{desybluedark}{themeprimarydark}%
+	\colorlet{desybluedarkdark}{themeprimarydarker}%
+	\colorlet{bdark}{themeprimary}%
+	\colorlet{desyorange}{themesecondary}%
+	\colorlet{desyorangedark}{themesecondarydark}%
+}
+
+\usepalette{desy}
+
+% -----------------------------
+% FIXED COLORS
+% -----------------------------
+\definecolor{uicblue}{RGB/cmyk}{0,30,98/100,94,30,28}      % text on light slides
+\definecolor{steelgray}{RGB/cmyk}{50,50,50/0,0,0,80}      % blocks on dark slides
+\definecolor{softdark}{RGB}{60, 60, 60}                   % acknowledgement text
+\definecolor{chicagoblue}{RGB/cmyk}{65,182,230/65,3,0,0}  % example colorblock
+\definecolor{uihteal}{RGB/cmyk}{0,133,173/92,14,8,11}     % links (\hrefcol)

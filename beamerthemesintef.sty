@@ -1,0 +1,391 @@
+% Fork of the UIC Beamer presentation template
+% Original template by Usama Muneeb <umunee2@uic.edu>
+%
+% This fork includes modifications for DESY-style presentations,
+% including TikZ-based chapter backgrounds and configurable color palettes.
+%
+% The original template itself is derived from the SINTEF template
+% by Federico Zenith <federico.zenith@sintef.no>, which in turn
+% descends from Håvard Berland's beamerthementnu class.
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+% See the GNU General Public License for more details:
+% <http://www.gnu.org/licenses/>
+%
+% Modifications by Saverio Monaco
+
+\ProvidesPackage{beamerthemesintef}[2025/09/11]
+
+\RequirePackage{etoolbox}
+\RequirePackage{tikz}
+\usepackage{lmodern}
+\usepackage{fontawesome}
+\usepackage{framed}      % for the leftbar environment
+
+% Theme options
+%   palette=<name>   predefined color pair (desy, ocean), see sintefcolor.sty
+\def\sintef@palette{desy}
+\DeclareOptionBeamer{palette}{\def\sintef@palette{#1}}
+\ProcessOptionsBeamer
+
+% Force 16:9 aspect ratio
+\RequirePackage{geometry}
+\geometry{paperwidth=16cm,paperheight=9cm}
+
+\RequirePackage{sinteffont}
+\renewcommand{\familydefault}{\sfdefault}
+
+\RequirePackage{graphicx,sintefcolor}
+\usepalette{\sintef@palette}
+
+% -----------------------------
+% LOGOS AND FOOTLINE CONTENT
+% -----------------------------
+% \lightlogo{file}   logo in the top-left corner of light slides (empty: none)
+% \darklogo{file}    logo in the top-left corner of dark and chapter slides
+% \footerlogo{file}  small logo at the left of the footline (empty: none)
+% \footertext{text}  text next to the footer logo, e.g. an e-mail address
+\newcommand{\sintef@lightlogo}{}
+\newcommand{\sintef@darklogo}{assets/logo_white}
+\newcommand{\sintef@footerlogo}{assets/logo_white}
+\newcommand{\sintef@footertext}{}
+\newcommand{\lightlogo}[1]{\renewcommand{\sintef@lightlogo}{#1}}
+\newcommand{\darklogo}[1]{\renewcommand{\sintef@darklogo}{#1}}
+\newcommand{\footerlogo}[1]{\renewcommand{\sintef@footerlogo}{#1}}
+\newcommand{\footertext}[1]{\renewcommand{\sintef@footertext}{#1}}
+
+\newlength{\lightlogowidth}
+\newlength{\darklogowidth}
+\setlength{\lightlogowidth}{0.075\paperwidth}
+\setlength{\darklogowidth}{0.14\paperwidth}
+
+\newcommand{\sintef@uselogo}[2]{% #1 = file, #2 = width
+	\ifdefempty{#1}{}{\includegraphics[width=#2]{#1}}%
+}
+
+% No navigation symbols
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{page number in head/foot}[totalframenumber]%
+
+\newcommand{\@footlinepayoff}{\usebeamertemplate{page number in head/foot}}
+\setbeamertemplate{footline}{%
+	\begin{beamercolorbox}[wd=\textwidth,ht=3mm,dp=1mm,rightskip=.5cm]{footline}
+		\usebeamerfont{footline}%
+		\ifdefempty{\sintef@footerlogo}{}{%
+			\hspace*{.1cm}%
+			\raisebox{-.8mm}{\includegraphics[height=3mm]{\sintef@footerlogo}}%
+			\ifdefempty{\sintef@footertext}{}{%
+				\hspace*{.2cm}%
+				\raisebox{-.5mm}{\rule{.5pt}{3mm}}}%
+		}%
+		\hspace*{.2cm}%
+		\sintef@footertext
+		\hfill\@footlinepayoff
+	\end{beamercolorbox}
+}
+
+% Logo currently shown in the headline (switched by \themecolor)
+\newcommand{\@sinteflogo}{\sintef@uselogo{\sintef@lightlogo}{\lightlogowidth}}
+\newcommand{\@sinteflogowhite}{\sintef@uselogo{\sintef@darklogo}{\darklogowidth}}
+
+% Set colours
+% NOTE! Beamer colors should be set in the preamble. It often works fine in the 
+%       document itself, but NOT for normal text foreground.
+%       \themecolor should only be called from the preamble.
+\newcommand{\themecolor}[1]{
+	\ifstrequal{#1}{dark}{%
+		\setbeamercolor{normal text}{fg=white,bg=themeprimarydark}
+		\setbeamercolor{structure}{fg=white}
+		\renewcommand{\@sinteflogo}{\sintef@uselogo{\sintef@darklogo}{\darklogowidth}}
+		\setbeamercolor{block title}{fg=uicblue,bg=steelgray}
+		\setbeamercolor{block body}{fg=uicblue,bg=steelgray}
+		\setbeamercolor{frametitle}{fg=white}
+		\setbeamercolor{framesubtitle}{fg=white}
+		\usebeamercolor[fg]{normal text}
+	}{}
+	\ifstrequal{#1}{light}{%
+		\setbeamercolor{normal text}{fg=uicblue,bg=white}
+		\setbeamercolor{structure}{fg=uicblue}
+		\renewcommand{\@sinteflogo}{\sintef@uselogo{\sintef@lightlogo}{\lightlogowidth}}
+		\setbeamercolor{block title}{fg=white,bg=themeprimarydark}
+		\setbeamercolor{block body}{fg=white,bg=themeprimarydark}
+		\setbeamercolor{frametitle}{fg=themeprimarydark}
+		\setbeamercolor{framesubtitle}{fg=themesecondarydark}
+		\usebeamercolor[fg]{normal text}
+	}{}
+}
+\themecolor{light}
+
+\setbeamercolor{title}{fg=themeprimarydark,bg=white}
+\setbeamercolor{alerted text}{fg=themeprimarydark}
+\setbeamercolor{author}{fg=black}
+\setbeamercolor{date}{fg=black}
+\setbeamercolor{footline}{fg=white,bg=themeprimarydark}
+
+\setbeamerfont{author}{series=\bfseries}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{title}{series=\bfseries, size=\LARGE}
+\setbeamerfont{subtitle}{series=\mdseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamerfont{framesubtitle}{series=\mdseries}
+\setbeamerfont{footline}{size=\scriptsize}
+\setbeamerfont{block title}{series=\centering\bfseries}
+
+% Code to get prettier boxes
+\setbeamertemplate{blocks}[rounded]
+
+% Bullets in several levels
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{\textemdash}
+\setbeamertemplate{itemize subsubitem}{\ensuremath{\circ}}
+
+\newenvironment{colorblock}[3][white]{%
+	\begingroup
+	\setbeamercolor{block title}{fg=#1,bg=#2}
+	\setbeamercolor{block body} {fg=#1,bg=#2}
+	\begin{block}{#3}
+		}{%
+	\end{block}
+	\endgroup
+}
+
+% Put the logo in each slide's top left area
+\setbeamertemplate{headline}{\vspace{0.03\textwidth}\hspace{0.03\textwidth}\@sinteflogo}
+
+\newlength{\titlemanualoffset}
+\setlength{\titlemanualoffset}{0ex}
+% Define frame title and subtitle layout
+\setbeamertemplate{frametitle}{%
+	\vspace*{.1cm}
+	\hspace*{-1.2cm}
+	\vspace*{\titlemanualoffset}
+	\begin{beamercolorbox}[leftskip=1cm, rightskip=-1cm]{frametitle}%
+		\usebeamerfont{frametitle}\insertframetitle\hfill
+		% Setting an invisible placeholder subtitle will fix the title in a constant position
+		% This is due to the way the default template is defined in `beamerouterthemedefault.sty'
+		\ifx\insertframesubtitle\empty
+			\usebeamerfont{framesubtitle}\usebeamercolor[bg]{normal text}Placeholder
+		\else
+			\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle
+		\fi
+	\end{beamercolorbox}
+}
+
+\newcommand{\TikzSplitSlideTikz}[4]{%
+	% #1 = filename
+	% #2 = size (scale factor)
+	% #3 = x position
+	% #4 = y position
+	\rule{0.4\paperwidth}{0pt}%
+	\begin{tikzpicture}
+		\color{black}
+		\clip (-0.1\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth, 0.5\paperheight) --
+		( 0.1\paperwidth, 0.5\paperheight) -- cycle;
+		\fill[color=themesecondary!60] (-0.1\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth, 0.5\paperheight) --
+		( 0.1\paperwidth, 0.5\paperheight) -- cycle;
+		\fill[color=white] (-0.075\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth, 0.5\paperheight) --
+		( 0.1\paperwidth, 0.5\paperheight) --
+		( 0.005\paperwidth, 0.5\paperheight) -- cycle;
+		\node at (#3,#4) {%
+			\scalebox{#2}{#1}%
+		};
+	\end{tikzpicture}
+}
+
+\newlength{\titleboxwidth}
+\setlength{\titleboxwidth}{12cm}
+\setbeamertemplate{title page}{%
+	\begin{tikzpicture}[overlay]
+		\node[color=themeprimarydarker, anchor=west, text width = \titleboxwidth] (tit) at (0, .6) {\usebeamerfont{title}\inserttitle\par};
+		\node[anchor=west] (sub) at ([yshift=-1.5cm]tit.west) {\usebeamerfont{subtitle}\insertsubtitle\par};
+		\node[anchor=west] (auth) at ([yshift=-1.5cm]sub.west) {\usebeamerfont{author}\insertauthor};
+		\node[anchor=west] (date) at ([yshift=-.4cm, xshift=-1.5cm]auth.south) {\usebeamerfont{date}\raisebox{-.1cm}{\insertdate}};
+		\node (logo) at ([xshift=1.25cm, yshift=-1.75cm]sub.east) {\inserttitlegraphic};
+	\end{tikzpicture}
+}
+
+\renewcommand{\maketitle}{
+	\begingroup
+	\setbeamertemplate{headline}{}
+	\setbeamertemplate{footline}{
+		\begin{beamercolorbox}[wd=\textwidth,ht=3mm,dp=1mm,rightskip=.5cm]{footline}
+			\strut\hfill
+		\end{beamercolorbox}
+	}
+	\begin{frame}%
+		\titlepage%
+	\end{frame}%
+	\endgroup
+}
+
+\newcommand{\TikzSplitSlideChap}[4]{%
+	% #1 = filename
+	% #2 = size (scale factor)
+	% #3 = x position
+	% #4 = y position
+	\rule{0.4\paperwidth}{0pt}%
+	\begin{tikzpicture}
+		\clip (-0.1\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth, 0.5\paperheight) --
+		( 0.1\paperwidth, 0.5\paperheight) -- cycle;
+		\fill[color=white] (-0.1\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth,-0.5\paperheight) --
+		( 0.5\paperwidth, 0.5\paperheight) --
+		( 0.1\paperwidth, 0.5\paperheight) -- cycle;
+		\node at (#3,#4) {%
+			\includegraphics[height=#2\paperheight]{#1}%
+		};
+	\end{tikzpicture}
+}
+
+\newenvironment{tikzter}[5][]{
+	\section{#5} % <- this registers it in the ToC
+	\begingroup
+	\setbeamertemplate{headline}{\vspace{0.03\textwidth}\hspace{0.03\textwidth}\@sinteflogowhite}
+	\setbeamertemplate{footline}{}
+
+	\setbeamercolor{frametitle}{fg=white}
+	\setbeamercolor{normal text}{fg=white,bg=themeprimarydark}
+
+	% If the optional #1 (background image filename) is not empty, use TikzSplitSlideChap
+	\ifstrempty{#1}{}{\setbeamertemplate{background}{\TikzSplitSlideTikz{#1}{#2}{#3}{#4}}}
+
+	\setbeamertemplate{frametitle}{%
+		\hspace*{0.0125\textwidth}% alignment with logo
+		\begin{beamercolorbox}[wd=0.45\textwidth]{frametitle}
+			\usebeamerfont{frametitle}\insertframetitle\\[-8ex]
+			\usebeamerfont{framesubtitle}\insertframesubtitle
+		\end{beamercolorbox}
+	}
+
+	\begin{frame}{#5}
+		\hspace*{0.05\textwidth}%
+		\minipage{0.35\textwidth}%
+		\usebeamercolor[fg]{normal text}%
+		}{
+		\endminipage
+	\end{frame}
+	\endgroup
+	\usebeamercolor[fg]{normal text}
+}
+
+\newenvironment{chapter}[5][]{
+	\section{#5} % <- this registers it in the ToC
+	\begingroup
+	\setbeamertemplate{headline}{\vspace{0.03\textwidth}\hspace{0.03\textwidth}\@sinteflogowhite}
+	\setbeamertemplate{footline}{}
+
+	\setbeamercolor{frametitle}{fg=white}
+	\setbeamercolor{normal text}{fg=white,bg=themeprimarydark}
+
+	% If the optional #1 (background image filename) is not empty, use TikzSplitSlideChap
+	\ifstrempty{#1}{}{\setbeamertemplate{background}{\TikzSplitSlideChap{#1}{#2}{#3}{#4}}}
+
+	\setbeamertemplate{frametitle}{%
+		\hspace*{0.0125\textwidth}% alignment with logo
+		\begin{beamercolorbox}[wd=0.45\textwidth]{frametitle}
+			\usebeamerfont{frametitle}\insertframetitle\\[-8ex]
+			\usebeamerfont{framesubtitle}\insertframesubtitle
+		\end{beamercolorbox}
+	}
+
+	\begin{frame}{#5}
+		\hspace*{0.05\textwidth}%
+		\minipage{0.35\textwidth}%
+		\usebeamercolor[fg]{normal text}%
+		}{
+		\endminipage
+	\end{frame}
+	\endgroup
+	\usebeamercolor[fg]{normal text}
+}
+
+\newenvironment{sidepic}[2]{% Args: image, frame title
+	\begingroup
+	\setbeamertemplate{background}{%
+		\hspace*{0.6\paperwidth}%
+		\includegraphics[height=\paperheight]{#1}%
+	}
+	\setbeamertemplate{frametitle}{% Same as normal, but with right skip
+		\vspace*{.1cm}
+		\hspace*{-1.2cm}
+		\vspace*{\titlemanualoffset}
+		\begin{beamercolorbox}[leftskip=1cm,rightskip=0.4\textwidth]{frametitle}%
+			\usebeamerfont{frametitle}\insertframetitle\hfill
+			\ifx\insertframesubtitle\empty
+				\usebeamerfont{framesubtitle}\usebeamercolor[bg]{normal text}Placeholder
+			\else
+				\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle
+			\fi
+		\end{beamercolorbox}
+	}
+	\begin{frame}{#2}
+		\minipage{0.6\textwidth}%
+		}{%
+		\endminipage
+	\end{frame}
+	\endgroup
+}
+
+% -----------------------------
+% HIGHLIGHT BAR
+% -----------------------------
+% \begin{leftbar} ... \end{leftbar}: tinted box with a primary-colored bar
+\renewenvironment{leftbar}[1][\hsize]
+{%
+	\def\FrameCommand
+	{%
+		{\color{themeprimary!80}\vrule width 3pt}%
+		\hspace{0pt}%must no space.
+		\fboxsep=\FrameSep\colorbox{themeprimary!10}%
+	}%
+	\MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}%
+}
+{\endMakeFramed}
+
+% -----------------------------
+% TABLE OF CONTENTS
+% -----------------------------
+\setbeamertemplate{section in toc}{%
+	\leavevmode
+	\hangindent=1cm
+	\hangafter=1
+	\noindent
+	\hbox to 1cm{\inserttocsectionnumber.\hfil}%
+	\raggedright
+	\inserttocsection\par
+}
+\setbeamerfont{section in toc}{size=\large,series=\bfseries}
+
+\let\sintef@tableofcontents\tableofcontents
+\renewcommand{\tableofcontents}{%
+	\begingroup
+	\setlength{\parskip}{1.5em}
+	\sintef@tableofcontents
+	\endgroup
+}
+
+% -----------------------------
+% BACKUP SLIDES
+% -----------------------------
+% Wrap backup slides in \backupbegin ... \backupend so that they do not
+% count towards the total number of frames shown in the footline.
+\newcounter{finalframe}
+\newcommand{\backupbegin}{\setcounter{finalframe}{\value{framenumber}}}
+\newcommand{\backupend}{\setcounter{framenumber}{\value{finalframe}}}
+
+\setbeamertemplate{bibliography item}{\insertbiblabel}

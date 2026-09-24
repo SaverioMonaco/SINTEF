@@ -1,28 +1,91 @@
 \documentclass{beamer}
-\usetheme{desy}
-\usepackage{amsfonts,amsmath,oldgerm,algorithm,algpseudocode}
+
+% -----------------------------
+% THEME AND COLORS
+% -----------------------------
+% Pick a predefined palette ...
+% \usetheme[palette=desy]{sintef}    % DESY blue + orange
+\usetheme[palette=ocean]{sintef} % deep blue + teal
+%
+% ... or any pair of colors (primary, secondary), set after \usetheme:
+% \definecolor{myprimary}{RGB}{120, 0, 60}
+% \definecolor{mysecondary}{RGB}{240, 170, 0}
+% \setpalette{myprimary}{mysecondary}
+
+% -----------------------------
+% LOGOS AND FOOTLINE
+% -----------------------------
+% Replace the dummy logos with your own (e.g. assets/DESY.pdf, assets/DESY_white.pdf)
+\lightlogo{}                         % top-left of light slides (empty: none)
+\darklogo{assets/logo_white}         % top-left of dark and chapter slides
+\footerlogo{assets/logo_white}       % left of the footline
+\footertext{\href{mailto:name.surname@institute.org}{\scalebox{.8}{\faEnvelopeO}\,\, name.surname@institute.org}}
+
+\usepackage{amsfonts,amsmath,algorithm,algpseudocode}
 \usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
+\usepackage{hyperref}
+\usetikzlibrary{calc,arrows.meta}
 
 \newcommand{\hrefcol}[2]{\textcolor{uihteal}{\href{#1}{#2}}}
 \newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
+
+\newcommand{\acknowledgement}{This work has received funding from the Dummy Funding Agency under Grant Agreement No.~000000. Replace this text with your own acknowledgement.}
 
 % Please see Section 18.1 of Beamer User Guide for all the options \usefonttheme provides
 \usefonttheme[onlymath]{serif}
 % \usefonttheme{serif} % use this if you would like Serif font throughout (and not just for math)
 
+% Small drawing in the theme colors, used on the title page and on a chapter slide
+\newcommand{\dummygraphic}{%
+	\begin{tikzpicture}[every node/.style={circle, minimum size=6mm, line width=1pt}]
+		\foreach \i/\x/\y in {1/0/0, 2/1.2/.8, 3/1.2/-.8, 4/2.4/0, 5/3.6/.8, 6/3.6/-.8}
+		\node[draw=themeprimary, fill=themeprimary!20] (n\i) at (\x,\y) {};
+		\foreach \a/\b in {1/2, 1/3, 2/4, 3/4, 4/5, 4/6, 2/3}
+		\draw[themesecondary, line width=1.2pt] (n\a) -- (n\b);
+	\end{tikzpicture}%
+}
 
-\title{Get started with the DESY-SINTEF Beamer Theme}
+\title{Get started with the SINTEF Beamer Theme}
 \subtitle{Using \LaTeX\ to prepare slides}
+\titlegraphic{\scalebox{1.2}{\dummygraphic}}
 % This can be adjusted accordingly for longer titles
-\setlength{\titleboxwidth}{0.55\textwidth}
+\setlength{\titleboxwidth}{12cm}
 
-\author{\href{mailto:saverio.monaco@desy.de}{Saverio Monaco}}
+\author{\href{mailto:name.surname@institute.org}{Name Surname}}
 \date{\today}
 
 \begin{document}
 \maketitle
 
-\begin{frame}[fragile]{Beamer for UIC presentations}
+\themecolor{dark}
+{
+	\setbeamertemplate{footline}{}
+	\begin{frame}
+		\frametitle{Outline}
+		\begin{minipage}[t]{.45\linewidth}
+			\vspace*{.5cm}
+			\tableofcontents
+		\end{minipage}\hfill
+		\begin{minipage}[t]{.5\linewidth}
+			\vspace*{-.5cm}
+			\begin{tikzpicture}
+				% Replace with e.g. \includegraphics[width=5.5cm, page=1]{paper.pdf}
+				\node[fill=white, draw=black, minimum width=5.5cm, minimum height=4.5cm, text=softdark] (paper) at (0, 0) {\textit{Paper preview}};
+				\node[anchor=south west] (link) at ([yshift=.1cm]paper.north west) {\bfseries\footnotesize \faGithub\, \href{https://github.com/SaverioMonaco/DESY-SINTEF}{github.com/SaverioMonaco/DESY-SINTEF}};
+				\node[anchor=south west] (arxiv) at (link.north west) {\bfseries\footnotesize arXiv: \href{https://arxiv.org/abs/0000.00000}{arxiv.org/abs/0000.00000}};
+			\end{tikzpicture}
+		\end{minipage}
+	\end{frame}
+}
+\themecolor{light}
+
+% Chapter slide with a TikZ drawing as background:
+%   \begin{tikzter}[<tikz code>]{<scale>}{<x>}{<y>}{<title>} ... \end{tikzter}
+\begin{tikzter}[\dummygraphic]{1.3}{3}{0}{Getting Started}
+	\rule{0pt}{.75cm}\textit{Quick start, colors and logos}
+\end{tikzter}
+
+\begin{frame}[fragile]{Beamer for SINTEF presentations}
 	\framesubtitle{A quick start}
 	If you would like \LaTeX\ in your presentation, Beamer is a great way to go!
 	\begin{itemize}
@@ -38,12 +101,43 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Colors and logos}
+	\framesubtitle{Customizing the theme}
+	\begin{leftbar}
+		\textbf{Palette:} the theme is driven by a \textbf{primary} and a \textbf{secondary} color.
+	\end{leftbar}
+	\begin{columns}[t]
+		\begin{column}{0.55\textwidth}
+			\small
+			\begin{itemize}
+				\item Predefined: \verb|\usetheme[palette=desy]{sintef}| or \verb|palette=ocean|
+				\item Any pair, after \verb|\usetheme|:\\
+				      \verb|\setpalette{myprimary}{mysecondary}|
+				\item Logos: \verb|\lightlogo|, \verb|\darklogo|, \verb|\footerlogo|
+				\item Footline text: \verb|\footertext{...}|
+				\item Highlighted text: \verb|\begin{leftbar}...\end{leftbar}|
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.4\textwidth}
+			\small
+			Colors available in your slides:\\[.2cm]
+			\testcolor{themeprimary}\\
+			\testcolor{themeprimarydark}\\
+			\testcolor{themeprimarydarker}\\
+			\testcolor{themesecondary}\\
+			\testcolor{themesecondarydark}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+% Chapter slide with an image as background:
+%   \begin{chapter}[<image>]{<height>}{<x>}{<y>}{<title>} ... \end{chapter}
 \begin{chapter}[plots/min_fuel.png]{0.8}{3}{0}{Slide Layouts}
  \textit{Some standard slide layouts}
 \end{chapter}
 
 \begin{frame}[fragile]{Images, columns and tips for good slides}
-	\framesubtitle{\textbf{Do use} this optional subtitle where appropriate}
+	\framesubtitle{Optional subtitle}
 	\begin{columns}
 		\begin{column}{0.7\textwidth}
 			\begin{itemize}
@@ -110,53 +204,9 @@
 	\end{columns}
 \end{frame}
 
-
-\begin{frame}{Blocks}
-	Some content will just look better in blocks.
-	\begin{columns}
-		\begin{column}{0.4\textwidth}
-			\begin{block}{Block title}
-				This is a \texttt{block}. Its color will match the color of the footline. The \texttt{block} environment is native to Beamer.
-			\end{block}
-		\end{column}
-		\begin{column}{0.6\textwidth}
-			\begin{colorblock}[black]{chicagoblue}{Block title}
-				This Beamer theme also provides a \texttt{colorblock} environment which is a wrapper on top of the usual \texttt{block} environment in Beamer. It allows you to specify a custom background and font color.
-			\end{colorblock}
-		\end{column}
-	\end{columns}
-
-	\vspace{3ex}
-	Here's an example usage:
-
-	\begin{columns}
-		\begin{column}{0.5\textwidth}
-			\begin{block}{The discrete case}
-				...
-			\end{block}
-		\end{column}
-		\begin{column}{0.5\textwidth}
-			\begin{colorblock}[black]{chicagoblue}{The continuous case}
-				...
-			\end{colorblock}
-		\end{column}
-	\end{columns}
-\end{frame}
-
-
-\begin{frame}{Blocks for theorems}
-	Beamer also uses blocks by default to wrap theorems.
-	\begin{theorem} This is a theorem. \end{theorem}
-\end{frame}
-
-
-\begin{sidepic}{assets/uic_seo.jpg}{Side-Picture Slides}
-	\framesubtitle{Subtitle here}
-	This Beamer theme also provides a \texttt{sidepic} environment which is a wrapper on top of the \texttt{frame} environment.
-	\begin{itemize}
-		\item It has an optional \texttt{image} argument which will help you achieve a layout of this type.
-	\end{itemize}
-\end{sidepic}
+\begin{chapter}[plots/min_time.png]{0.8}{3}{0}{Algorithms}
+ \textit{Typesetting pseudocode}
+\end{chapter}
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
@@ -221,7 +271,7 @@
 			            \begin{itemize}
 				            \item Do it as \verb|\newcommand*\CALL[2]{\textsc{#1}(#2)}|
 				            \item Remember that not all fonts have a small caps variant needed by \verb|\textsc|
-				            \item You can look at \texttt{uicfont.sty} to see how we augment our font with another small caps font (i.e. \textbf{PlayFair Display SC})
+				            \item You can look at \texttt{sinteffont.sty} to see how we augment our font with another small caps font (i.e. \textbf{PlayFair Display SC})
 			            \end{itemize}
 			      \item Additionally, the \verb|\Comment| of \texttt{algpseudocode} might look better than the \verb|\COMMENT| of \texttt{algorithmic}
 			            \begin{itemize}
@@ -241,15 +291,59 @@
 		\item  I would appreciate contributions of all sorts (pull requests, identifying issues, etc).
 		\item  If you have any suggestions,
 		      \hrefcol{mailto:saverio.monaco@desy.de}{send them to me!}
+		\item Citations work as usual~\cite{tantau2023beamer}.
 	\end{itemize}
 \end{frame}
 
+% ========== BACKUP START ==========
+\appendix
+\backupbegin
+
 \themecolor{dark}
-\begin{frame}
-	\begin{center}
-		{\Huge\bfseries Thank you!}
-	\end{center}
+{
+	\setbeamertemplate{footline}{}
+	\begin{frame}[t]
+		\begin{tikzpicture}[overlay, remember picture]
+			% White strip at the bottom with the funding logos and acknowledgement
+			\fill[white] (current page.south west) rectangle ([yshift=2cm]current page.south east);
+			\node[anchor=south, text=softdark, text width=.95\paperwidth, font=\footnotesize]
+			at ([yshift=.1cm]current page.south) {\acknowledgement};
+			\node at ([yshift=1.4cm, xshift=-.35\paperwidth]current page.south) {\includegraphics[height=.5cm]{assets/logo_dark}};
+			\node at ([yshift=1.4cm]current page.south) {\includegraphics[height=.5cm]{assets/logo_dark}};
+			\node at ([yshift=1.4cm, xshift=.35\paperwidth]current page.south) {\includegraphics[height=.5cm]{assets/logo_dark}};
+		\end{tikzpicture}
+
+		\only<1>{
+			\textbf{Main resources:}
+			\begin{itemize}
+				\item \textbf{Paper}: ``Title of the first reference''\\
+				      \mbox{\footnotesize\url{https://arxiv.org/abs/0000.00000}}
+				\item \textbf{Code}: ``Title of the repository''\\
+				      \mbox{\footnotesize\url{https://github.com/user/repository}}
+			\end{itemize}
+		}
+		\only<2>{
+			~\\[1.5cm]
+			\begin{center}
+				{\huge\bfseries Thank you}
+			\end{center}
+		}
+	\end{frame}
+}
+
+\begin{frame}[allowframebreaks]
+	\frametitle{References}
+	\nocite{*}
+	\bibliographystyle{unsrt}
+	\bibliography{references}
 \end{frame}
 \themecolor{light}
+
+\begin{frame}[fragile]{Backup slide}
+	\framesubtitle{Not counted in the total}
+	Slides between \verb|\backupbegin| and \verb|\backupend| do not count towards the total number of frames shown in the footline.
+\end{frame}
+
+\backupend
 
 \end{document}
